@@ -90,7 +90,7 @@ fun PartTitleCommon(
             colorFilter = ColorFilter.tint(Color.White)
         )
         Text(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.weight(1F),
             text = title,
             color = Color.White,
             fontSize = 20.sp,
