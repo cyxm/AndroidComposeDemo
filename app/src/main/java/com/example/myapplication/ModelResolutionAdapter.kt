@@ -3,31 +3,35 @@ package com.example.myapplication
 import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.Density
 import kotlin.math.min
 
 /**
  * To fit different resolution model for Compose
  */
-class ModelResolutionAdapter {
-    fun getD(context: Context): Density {
-        val displayMetrics = LocalContext.current.resources.displayMetrics
-        Density()
+open class ModelResolutionAdapter {
+    companion object {
+        /**
+         * the design size for standard
+         */
+        private val STANDARD_SMALL_SIDE_DP = 360
+
+        /**
+         * init density and set it to global config
+         */
+        fun initDensity(context: Context) {
+            val displayMetrics = context.resources.displayMetrics
+            val widthDp = displayMetrics.widthPixels / displayMetrics.density
+            val heightDp = displayMetrics.heightPixels / displayMetrics.density
+            val smallSideDp = min(widthDp, heightDp)
+            displayMetrics.scaledDensity *= smallSideDp / STANDARD_SMALL_SIDE_DP
+        }
     }
 }
 
-fun initDensity(context: Context): Density {
-    val displayMetrics = context.resources.displayMetrics
-    val smallSideDp =
-        min(displayMetrics.widthPixels, displayMetrics.heightPixels) / displayMetrics.density
-
-}
-
 @Composable
-fun Fit(density: Density, content: @Composable () -> Unit) {
-    CompositionLocalProvider(LocalDensity provides density) {
+fun Fit(content: @Composable () -> Unit) {
+    CompositionLocalProvider(LocalDensity provides d) {
         content()
     }
 }
